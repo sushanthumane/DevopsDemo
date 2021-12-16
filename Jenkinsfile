@@ -11,7 +11,7 @@ node {
         /* This builds the actual image; synonymous to
          * docker build on the command line */
 
-        app = docker.build("sushanthumane/DevopsDemo")
+        app = docker.build("sushanthumane/devops_demo")
     }
 
     stage('Test image') {
