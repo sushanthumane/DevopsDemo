@@ -1,36 +1,22 @@
-node {
-    def app
+pipeline {
+   agent any
 
-    stage('Clone repository') {
-        /* Let's make sure we have the repository cloned to our workspace */
-
-        checkout scm
-    }
-
-    stage('Build image') {
-        /* This builds the actual image; synonymous to
-         * docker build on the command line */
-
-        app = docker.build("sushanthumane/devops_demo")
-    }
-
-    stage('Test image') {
-        /* Ideally, we would run a test framework against our image.
-         * Just an example */
-
-        app.inside {
-            sh 'echo "Tests passed"'
+   stages {
+      stage('Build') {
+        steps {
+          echo 'Building...'
+          echo "Running ${env.BUILD_ID} ${env.BUILD_DISPLAY_NAME} on ${env.NODE_NAME} and JOB ${env.JOB_NAME}"
         }
-    }
-
-    stage('Push image') {
-        /* Finally, we'll push the image with two tags:
-         * First, the incremental build number from Jenkins
-         * Second, the 'latest' tag.
-         * Pushing multiple tags is cheap, as all the layers are reused. */
-        docker.withRegistry(url: 'https://registry.hub.docker.com', credentialsId: 'docker') {
-            app.push("${env.BUILD_NUMBER}")
-            app.push("latest")
-        }
-    }
+   }
+   stage('Test') {
+     steps {
+        echo 'Testing...'
+     }
+   }
+   stage('Deploy') {
+     steps {
+       echo 'Deploying...'
+     }
+   }
+  }
 }
